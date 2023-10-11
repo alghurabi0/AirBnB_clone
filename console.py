@@ -168,6 +168,7 @@ class HBNBCommand(cmd.Cmd):
 
     @classmethod
     def isfloat(cls, value):
+        """ checks if value is float."""
         try:
             float(value)
             return True
@@ -215,6 +216,7 @@ class HBNBCommand(cmd.Cmd):
             storage.save()
 
     def do_test(self, line):
+        """ test method for experiments. """
         if self.find('BaseModel.d59ae699-629b-4dd9-be1c-e8449990e04c') is True:
             print("found it")
         else:

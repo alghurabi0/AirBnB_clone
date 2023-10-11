@@ -14,7 +14,7 @@ from models.review import Review
 class FileStorage():
     """ Converts python to json and other way. """
     __file_path = 'file.json'
-    __objects = {} #className.id
+    __objects = {}
 
     def all(self):
         """ returns a dic (__objects). """
@@ -32,13 +32,21 @@ class FileStorage():
             data[key] = value.to_dict()
         with open(FileStorage.__file_path, 'w') as file:
             json.dump(data, file)
+            file.write('\n')
 
     def reload(self):
         """ Deserializes the json file to __objects only of the json file
-            exists: otherwise, do nothing if the file doesn't exist, no 
+            exists: otherwise, do nothing if the file doesn't exist, no
             exception should be raised. """
-        classes = {'BaseModel': BaseModel, 'User': User, 'Place': Place, 
-                'Amenity': Amenity, 'Review': Review, 'State': State, 'City': City}
+        classes = {
+                'BaseModel': BaseModel,
+                'User': User,
+                'Place': Place,
+                'Amenity': Amenity,
+                'Review': Review,
+                'State': State,
+                'City': City
+                }
         if not os.path.exists(FileStorage.__file_path):
             return
 
