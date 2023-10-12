@@ -15,10 +15,19 @@ class FileStorage():
     """ Converts python to json and other way. """
     __file_path = 'file.json'
     __objects = {}
+    classes = {
+                'BaseModel': BaseModel,
+                'User': User,
+                'Place': Place,
+                'Amenity': Amenity,
+                'Review': Review,
+                'State': State,
+                'City': City
+                }
 
     def all(self):
         """ returns a dic (__objects). """
-        return FileStorage.__objects
+        return self.__objects
 
     def new(self, obj):
         """ sets in (__objects) the obj with key (obj-class-name).id. """
@@ -50,14 +59,17 @@ class FileStorage():
         if not os.path.exists(FileStorage.__file_path):
             return
 
-        with open(FileStorage.__file_path, 'r') as file:
-            data = None
+        try:
+            with open(FileStorage.__file_path, 'r') as file:
+                data = None
 
-            data = json.load(file)
+                data = json.load(file)
 
-            if data is None:
-                return
+                if data is None:
+                    return
 
-            FileStorage.__objects = {
-                key: classes[key.split('.')[0]](**value)
-                for key, value in data.items()}
+                FileStorage.__objects = {
+                    key: classes[key.split('.')[0]](**value)
+                    for key, value in data.items()}
+        except Exception:
+            pass

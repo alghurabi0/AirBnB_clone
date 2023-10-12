@@ -85,11 +85,15 @@ class HBNBCommand(cmd.Cmd):
 
     def do_quit(self, line):
         """ quits the command line. """
-        exit()
+        return True
 
     def do_EOF(self, line):
         """ Signals EOF to cmd. """
         return True
+
+    def emptyline(self):
+        """ empty line don't do anything. """
+        pass
 
     def do_create(self, line):
         """ Creates a new instance of a class and saves it to a json file. """
@@ -163,8 +167,8 @@ class HBNBCommand(cmd.Cmd):
             else:
                 all_in = storage.all()
                 print([
-                    "{}".format(str(v)) for k, v in all_in.items()
-                    if isinstance(all_in[k], HBNBCommand.classes[args[0]])])
+                    "{}".format(str(v)) for v in all_in.values()
+                    if v.__class__.__name__ == args[0]])
 
     @classmethod
     def isfloat(cls, value):
@@ -197,7 +201,7 @@ class HBNBCommand(cmd.Cmd):
             all_instances = storage.all()
             instance = all_instances[name_id]
             attr_name = args[2]
-            attr_value = args[3]
+            attr_value = args[3].strip('"')
             if not hasattr(instance, attr_name):
                 if attr_value.isdigit():
                     setattr(instance, attr_name, int(attr_value))
@@ -206,13 +210,9 @@ class HBNBCommand(cmd.Cmd):
                 else:
                     setattr(instance, attr_name, str(attr_value))
             else:
-                current_attr_value = getattr(instance, attr_name)
-                if isinstance(current_attr_value, int):
-                    setattr(instance, attr_name, int(attr_value))
-                elif isinstance(current_attr_value, float):
-                    setattr(instance, attr_name, float(attr_value))
-                else:
-                    setattr(instance, attr_name, str(attr_value))
+                cav = type(getattr(instance, attr_name))(attr_value)
+                setattr(instance, attr_name, cav)
+
             storage.save()
 
     def do_test(self, line):
@@ -221,6 +221,52 @@ class HBNBCommand(cmd.Cmd):
             print("found it")
         else:
             print("not found")
+
+    def default(self, line):
+        """
+        Method for custom commands.
+        """
+        args = line.split(' ')
+        if len(args) == 1 and '.' in line:
+            args2 = line.split('.')
+            if args2[1] == 'all()':
+                if args2[0] not in HBNBCommand.classes:
+                    print("** class doesn't exist **")
+                else:
+                    all_instances = storage.all()
+                    print([f"{v}" for v in
+                            all_instances.values() if
+                            v.__class__.__name__ == args2[0]])
+            elif args2[1] == 'count()':
+                if args2[0] not in HBNBCommand.classes:
+                    print("** class doesn't exist **")
+                    return ""
+                else:
+                    all_instances = storage.all()
+                    inst_list = [v for v in all_instances.values()
+                            if v.__class__.__name__ == [args2[0]])]
+                    print(len(inst_list))
+            elif 'show(' in args2[1]:
+                if args2[0] not in HBNBCommand.classes:
+                    print("** class doesn't exist **")
+                else:
+                    args_show = line.split('(')
+                    show_id = args_show[1].split(')')
+                    class_name = args2[0]
+                    instance_key = f'{class_name}.{show_id[0]}'
+                    if self.find(instance_key) == False:
+                        print("** no instance found **")
+                        return ""
+                    else:
+                        all_instances = storage.all()
+                        print(all_instances[instance_key])
+                        return ""
+            else:
+                return line
+        else:
+            return line"""
+        else:
+            print(f"*** Unknown syntax: {line}")
 
 
 if __name__ == '__main__':

@@ -19,6 +19,10 @@ class BaseModel:
                     setattr(self, key, strp(value, '%Y-%m-%dT%H:%M:%S.%f'))
                 else:
                     setattr(self, key, value)
+            if hasattr(self, 'created_at') is False:
+                self.created_at = datetime.now()
+            if hasattr(self, 'updated_at') is False:
+                self.updated_at = datetime.now()
 
         else:
             self.id = str(uuid.uuid4())
@@ -47,3 +51,9 @@ class BaseModel:
                 self.id,
                 self.__dict__
                 )
+    @classmethod
+    def all(cls):
+        """
+        Return a dict of all instance of the class.
+        """
+        return storage.all(cls.__name__)
