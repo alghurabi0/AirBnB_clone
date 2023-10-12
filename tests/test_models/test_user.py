@@ -68,5 +68,6 @@ class TestUser(unittest.TestCase):
         self.assertIn(user1, inst)
         self.assertIn(user2, inst)
 
+
 if __name__ == '__main__':
     unittest.main()

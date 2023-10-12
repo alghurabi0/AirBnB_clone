@@ -51,9 +51,3 @@ class BaseModel:
                 self.id,
                 self.__dict__
                 )
-    @classmethod
-    def all(cls):
-        """
-        Return a dict of all instance of the class.
-        """
-        return storage.all(cls.__name__)

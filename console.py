@@ -234,18 +234,21 @@ class HBNBCommand(cmd.Cmd):
                     print("** class doesn't exist **")
                 else:
                     all_instances = storage.all()
-                    print([f"{v}" for v in
-                            all_instances.values() if
-                            v.__class__.__name__ == args2[0]])
+                    insts = [
+                            f"{v}" for v in all_instances.values()
+                            if v.__class__.__name__ == args2[0]
+                            ]
+                    print(insts)
             elif args2[1] == 'count()':
                 if args2[0] not in HBNBCommand.classes:
                     print("** class doesn't exist **")
-                    return ""
                 else:
                     all_instances = storage.all()
-                    inst_list = [v for v in all_instances.values()
-                            if v.__class__.__name__ == [args2[0]])]
-                    print(len(inst_list))
+                    insts = [
+                            f"{v}" for v in all_instances.values()
+                            if v.__class__.__name__ == args2[0]
+                            ]
+                    print(len(insts))
             elif 'show(' in args2[1]:
                 if args2[0] not in HBNBCommand.classes:
                     print("** class doesn't exist **")
@@ -254,17 +257,27 @@ class HBNBCommand(cmd.Cmd):
                     show_id = args_show[1].split(')')
                     class_name = args2[0]
                     instance_key = f'{class_name}.{show_id[0]}'
-                    if self.find(instance_key) == False:
+                    if self.find(instance_key) is False:
                         print("** no instance found **")
-                        return ""
                     else:
                         all_instances = storage.all()
                         print(all_instances[instance_key])
-                        return ""
+            elif 'destroy(' in args2[1]:
+                if args2[0] not in HBNBCommand.classes:
+                    print("** class doesn't exist **")
+                else:
+                    args_show = line.split('(')
+                    show_id = args_show[1].split(')')
+                    class_name = args2[0]
+                    instance_key = f'{class_name}.{show_id[0]}'
+                    if self.find(instance_key) is False:
+                        print("** no instance found **")
+                    else:
+                        all_instances = storage.all()
+                        del all_instances[instance_key]
+                        storage.save()
             else:
-                return line
-        else:
-            return line"""
+                print(f"*** Unknown syntax: {line}")
         else:
             print(f"*** Unknown syntax: {line}")
 
