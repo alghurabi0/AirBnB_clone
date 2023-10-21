@@ -1,0 +1,22 @@
+.places > h1 {
+  font-size: 30px;
+}
+
+.place {
+  width: 390px;
+  padding: 15px;
+  margin: 15px;
+  border: 1px solid #ff5a5f;
+  border-radius: 4px;
+}
+
+.place > h2 {
+  font-size: 30px;
+}
+
+.place-cont {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+}
